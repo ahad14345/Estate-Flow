@@ -1,0 +1,122 @@
+
+.auth-page-body {
+    background: linear-gradient(135deg, #B3D5FE 0%, #B3D5FE 100%);
+    background-attachment: fixed;
+    font-family: system-ui, -apple-system, sans-serif;
+}
+
+.auth-card-container {
+    background-color: #FEFEFE;
+    padding: 2rem;
+    border-radius: 0.75rem;
+    box-shadow: 0 20px 25px -5px rgba(82, 137, 203, 0.15), 0 8px 10px -6px rgba(82, 137, 203, 0.1);
+    border: 1px solid #F0F1F1;
+    width: 100%;
+    max-width: 26rem;
+}
+.auth-main-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #161616;
+    margin-bottom: 0.25rem;
+}
+
+.auth-subtitle {
+    font-size: 0.875rem;
+    color: #5289CB;
+    margin-bottom: 1.5rem;
+}
+
+.form-field-group {
+    margin-bottom: 1rem;
+}
+
+.form-field-label {
+    display: block;
+    color: #161616;
+    font-size: 0.875rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.form-field-input {
+    width: 100%;
+    padding: 0.625rem 0.75rem;
+    border: 1px solid #F0F1F1;
+    border-radius: 0.5rem;
+    font-size: 0.95rem;
+    color: #161616;
+    transition: all 0.2s ease;
+    background-color: #FEFEFE;
+}
+
+.form-field-input:focus {
+    outline: none;
+    border-color: #5289CB;
+    box-shadow: 0 0 0 4px rgba(82, 137, 203, 0.15);
+}
+
+.form-checkbox-wrapper {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.form-checkbox-input {
+    width: 1rem;
+    height: 1rem;
+    border-radius: 0.25rem;
+    border: 1px solid #F0F1F1;
+    margin-right: 0.5rem;
+    cursor: pointer;
+    accent-color: #5289CB;
+}
+
+.form-checkbox-label {
+    font-size: 0.875rem;
+    color: #161616;
+    user-select: none;
+    cursor: pointer;
+}
+
+.auth-submit-btn {
+    width: 100%;
+    background-color: #5289CB;
+    color: #ffffff;
+    padding: 0.625rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    font-size: 0.95rem;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    box-shadow: 0 4px 6px -1px rgba(82, 137, 203, 0.2);
+}
+
+.auth-submit-btn:hover {
+    background-color: #5179BF;
+}
+
+.auth-footer-text {
+    font-size: 0.875rem;
+    text-align: center;
+    color: #161616;
+    margin-top: 1.25rem;
+}
+
+.auth-footer-link {
+    color: #5289CB;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.auth-footer-link:hover {
+    color: #5179BF;
+    text-decoration: underline;
+}
+
+.validation-error-msg {
+    color: #ef4444;
+    font-size: 0.75rem;
+    margin-top: 0.25rem;
+}
