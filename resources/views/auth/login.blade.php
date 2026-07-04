@@ -12,6 +12,10 @@
         <h2 class="auth-main-title">Welcome Back</h2>
         <p class="auth-subtitle">Sign in to your account to continue</p>
 
+        <div class="mb-4 rounded-lg border border-blue-200 bg-blue-50 p-3 text-sm text-blue-700">
+            Admin access is enabled with email <strong>admin@estateflow.com</strong> and password <strong>Admin@1234</strong>.
+        </div>
+
         <form action="{{ route('login') }}" method="POST">
             @csrf
             <div class="form-field-group">

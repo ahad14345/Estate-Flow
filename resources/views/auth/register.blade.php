@@ -12,6 +12,10 @@
         <h2 class="auth-main-title">Create Account</h2>
         <p class="auth-subtitle">Join Estate Flow and manage your listings</p>
 
+        <div class="mb-4 rounded-lg border border-gray-200 bg-gray-50 p-3 text-sm text-gray-700">
+            New accounts are stored in the configured database connection, which is set up for Oracle by default.
+        </div>
+
         <form action="{{ route('register') }}" method="POST">
             @csrf
             <div class="form-field-group">

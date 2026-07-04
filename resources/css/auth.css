@@ -42,7 +42,7 @@
 .form-field-input {
     width: 100%;
     padding: 0.625rem 0.75rem;
-    border: 1px solid #F0F1F1;
+    border: 1px solid #827e7e;
     border-radius: 0.5rem;
     font-size: 0.95rem;
     color: #161616;
@@ -66,7 +66,7 @@
     width: 1rem;
     height: 1rem;
     border-radius: 0.25rem;
-    border: 1px solid #F0F1F1;
+    border: 2px solid #000000;
     margin-right: 0.5rem;
     cursor: pointer;
     accent-color: #5289CB;
