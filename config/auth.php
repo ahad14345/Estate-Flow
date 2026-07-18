@@ -2,9 +2,7 @@
 
 use App\Models\User;
 
-return [
-
-    /*
+  /*
     |--------------------------------------------------------------------------
     | Authentication Defaults
     |--------------------------------------------------------------------------
@@ -13,7 +11,9 @@ return [
     | reset "broker" for your application. You may change these values
     | as required, but they're a perfect start for most applications.
     |
-    */
+    */return [
+
+  
 
     'defaults' => [
         'guard' => env('AUTH_GUARD', 'web'),

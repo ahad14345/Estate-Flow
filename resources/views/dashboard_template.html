@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>RealBiz ERP Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+</head>
+<body class="h-screen antialiased text-gray-700" x-data="{sidebarOpen: true, darkMode: false}">
+
+  <!-- Page wrapper -->
+  <div class="flex h-screen overflow-hidden">
+
+    <!-- Sidebar -->
+    <aside :class="sidebarOpen ? 'w-64' : 'w-16'" class="transition-width duration-200 bg-slate-900 text-slate-100 flex flex-col">
+
+      <!-- Top: Brand + Profile -->
+      <div class="flex items-center gap-3 px-4 py-4 border-b border-slate-800">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 bg-gradient-to-r from-indigo-600 to-cyan-400 rounded flex items-center justify-center text-white font-bold">RB</div>
+          <div x-show="sidebarOpen" class="leading-tight">
+            <div class="text-sm font-semibold">RealBiz ERP</div>
+            <div class="text-xs text-slate-300">Real Estate ERP</div>
+          </div>
+        </div>
+        <button @click="sidebarOpen = !sidebarOpen" class="ml-auto text-slate-400 hover:text-white focus:outline-none">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8m-8 6h16"/></svg>
+        </button>
+      </div>
+
+      <!-- Profile banner -->
+      <div class="px-4 py-3 border-b border-slate-800 flex items-center gap-3">
+        <div class="w-10 h-10 rounded-full bg-slate-700 flex items-center justify-center text-white font-medium">A</div>
+        <div x-show="sidebarOpen" class="flex-1">
+          <div class="text-sm font-medium">admin</div>
+          <div class="text-xs text-slate-400 truncate">admin@realbiz.com</div>
+        </div>
+        <svg x-show="sidebarOpen" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+      </div>
+
+      <!-- Nav sections -->
+      <nav class="flex-1 overflow-auto px-2 py-4 space-y-4">
+
+        <!-- Main -->
+        <div>
+          <div class="px-3 text-xs text-slate-400 uppercase tracking-wide">Main</div>
+          <ul class="mt-2 space-y-1">
+            <li>
+              <button @click="darkMode = !darkMode; document.documentElement.classList.toggle('dark')" class="w-full flex items-center gap-3 px-3 py-2 rounded hover:bg-slate-800">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-slate-300" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a1 1 0 0 0-1 1v1a1 1 0 1 0 2 0V3a1 1 0 0 0-1-1zM5.64 4.22a1 1 0 0 0-1.28 1.56l.7.58a1 1 0 1 0 1.28-1.56l-.7-.58zM20.64 4.22l-.7.58a1 1 0 1 0 1.28 1.56l.7-.58A1 1 0 0 0 20.64 4.22zM3 13h1a1 1 0 1 0 0-2H3a1 1 0 1 0 0 2zm17 0h1a1 1 0 1 0 0-2h-1a1 1 0 1 0 0 2zM6.34 18.78l-.7.58a1 1 0 1 0 1.28 1.56l.7-.58a1 1 0 1 0-1.28-1.56zM17.66 18.78a1 1 0 0 0 1.28 1.56l.7-.58a1 1 0 1 0-1.28-1.56l-.7.58zM12 18a1 1 0 0 0-1 1v1a1 1 0 1 0 2 0v-1a1 1 0 0 0-1-1z"/></svg>
+                <span x-show="sidebarOpen" class="text-sm">Dark Mode</span>
+              </button>
+            </li>
+            <li>
+              <a href="#" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-slate-800">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M13 5v6h6"/></svg>
+                <span x-show="sidebarOpen" class="text-sm">Dashboard</span>
+              </a>
+            </li>
+            <li>
+              <a href="#" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-slate-800">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-slate-300" viewBox="0 0 24 24" fill="currentColor"><path d="M5 3a2 2 0 00-2 2v14l7-3 7 3V5a2 2 0 00-2-2H5z"/></svg>
+                <span x-show="sidebarOpen" class="text-sm">CRM</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Projects & Properties -->
+        <div>
+          <div class="px-3 text-xs text-slate-400 uppercase tracking-wide">Projects & Properties</div>
+          <ul class="mt-2 space-y-1">
+            <li><a href="#" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-slate-800"><svg class="h-4 w-4 text-slate-300" viewBox="0 0 24 24" fill="currentColor"><path d="M3 13h8V3H3v10zM13 21h8V11h-8v10z"/></svg><span x-show="sidebarOpen" class="text-sm">Project Management</span></a></li>
+            <li><a href="#" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-slate-800"><svg class="h-4 w-4 text-slate-300" viewBox="0 0 24 24" fill="currentColor"><path d="M2 8l10-6 10 6v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8z"/></svg><span x-show="sidebarOpen" class="text-sm">Properties</span></a></li>
+            <li><a href="#" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-slate-800"><svg class="h-4 w-4 text-slate-300" viewBox="0 0 24 24" fill="currentColor"><path d="M12 12a5 5 0 100-10 5 5 0 000 10zM2 20a10 10 0 0120 0H2z"/></svg><span x-show="sidebarOpen" class="text-sm">Manage Customer</span></a></li>
+            <li><a href="#" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-slate-800"><svg class="h-4 w-4 text-slate-300" viewBox="0 0 24 24" fill="currentColor"><path d="M6 2h12v6H6zM4 10h16v10H4z"/></svg><span x-show="sidebarOpen" class="text-sm">Seller</span></a></li>
+            <li><a href="#" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-slate-800"><svg class="h-4 w-4 text-slate-300" viewBox="0 0 24 24" fill="currentColor"><path d="M4 6h16v12H4z"/></svg><span x-show="sidebarOpen" class="text-sm">Sales</span></a></li>
+          </ul>
+        </div>
+
+        <!-- Purchase Module -->
+        <div>
+          <div class="px-3 text-xs text-slate-400 uppercase tracking-wide">Purchase Module</div>
+          <ul class="mt-2 space-y-1">
+            <li><a href="#" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-slate-800"><svg class="h-4 w-4 text-slate-300" viewBox="0 0 24 24" fill="currentColor"><path d="M3 3h18v2H3zM5 7h14v14H5z"/></svg><span x-show="sidebarOpen" class="text-sm">View Vendors</span></a></li>
+            <li><a href="#" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-slate-800"><svg class="h-4 w-4 text-slate-300" viewBox="0 0 24 24" fill="currentColor"><path d="M6 3h12v6H6zM3 11h18v10H3z"/></svg><span x-show="sidebarOpen" class="text-sm">View Contractors</span></a></li>
+            <li><a href="#" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-slate-800"><svg class="h-4 w-4 text-slate-300" viewBox="0 0 24 24" fill="currentColor"><path d="M3 4h18v4H3zM3 10h18v10H3z"/></svg><span x-show="sidebarOpen" class="text-sm">Purchase Manage</span></a></li>
+          </ul>
+        </div>
+
+        <!-- Accounting Module -->
+        <div>
+          <div class="px-3 text-xs text-slate-400 uppercase tracking-wide">Accounting Module</div>
+          <ul class="mt-2 space-y-1">
+            <li><a href="#" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-slate-800"><svg class="h-4 w-4 text-slate-300" viewBox="0 0 24 24" fill="currentColor"><path d="M3 3h18v18H3z"/></svg><span x-show="sidebarOpen" class="text-sm">Head Types</span></a></li>
+            <li><a href="#" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-slate-800"><svg class="h-4 w-4 text-slate-300" viewBox="0 0 24 24" fill="currentColor"><path d="M2 7h20v2H2zM2 11h20v10H2z"/></svg><span x-show="sidebarOpen" class="text-sm">Income/Expense Head</span></a></li>
+            <li><a href="#" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-slate-800"><svg class="h-4 w-4 text-slate-300" viewBox="0 0 24 24" fill="currentColor"><path d="M4 4h16v6H4zM4 12h16v8H4z"/></svg><span x-show="sidebarOpen" class="text-sm">Balance Sheet</span></a></li>
+          </ul>
+        </div>
+
+        <!-- Other Module -->
+        <div>
+          <div class="px-3 text-xs text-slate-400 uppercase tracking-wide">Other Module</div>
+          <ul class="mt-2 space-y-1">
+            <li><a href="#" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-slate-800"><svg class="h-4 w-4 text-slate-300" viewBox="0 0 24 24" fill="currentColor"><path d="M3 7h18v2H3zM3 11h18v10H3z"/></svg><span x-show="sidebarOpen" class="text-sm">Worker Management</span></a></li>
+            <li><a href="#" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-slate-800"><svg class="h-4 w-4 text-slate-300" viewBox="0 0 24 24" fill="currentColor"><path d="M12 12a5 5 0 100-10 5 5 0 000 10zM2 20a10 10 0 0120 0H2z"/></svg><span x-show="sidebarOpen" class="text-sm">View Employees</span></a></li>
+            <li><a href="#" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-slate-800"><svg class="h-4 w-4 text-slate-300" viewBox="0 0 24 24" fill="currentColor"><path d="M3 5h18v14H3z"/></svg><span x-show="sidebarOpen" class="text-sm">User Management</span></a></li>
+            <li><a href="#" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-slate-800"><svg class="h-4 w-4 text-slate-300" viewBox="0 0 24 24" fill="currentColor"><path d="M2 7h20v2H2zM2 11h20v10H2z"/></svg><span x-show="sidebarOpen" class="text-sm">Client Access</span></a></li>
+            <li><a href="#" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-slate-800"><svg class="h-4 w-4 text-slate-300" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 100 20 10 10 0 000-20zM12 8v4l3 3"/></svg><span x-show="sidebarOpen" class="text-sm">Settings</span></a></li>
+          </ul>
+        </div>
+
+      </nav>
+
+      <!-- Footer -->
+      <div class="px-3 py-4 border-t border-slate-800 text-xs text-slate-400">
+        <div x-show="sidebarOpen">Powered by RealBiz ERP</div>
+        <div class="mt-1">Version 0.1</div>
+      </div>
+
+    </aside>
+
+    <!-- Main content area -->
+    <div class="flex-1 flex flex-col bg-gray-100 overflow-auto">
+
+      <!-- Top navigation -->
+      <header class="bg-white border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="flex items-center justify-between h-14">
+            <div class="flex items-center gap-3">
+              <button @click="sidebarOpen = !sidebarOpen" class="text-gray-600 hover:text-gray-900 focus:outline-none lg:hidden">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+              </button>
+              <div class="flex items-center gap-3">
+                <img src="/images/realbiz-logo.png" alt="RealBiz ERP logo" class="w-9 h-9 rounded" />
+                <div class="text-sm font-semibold">RealBiz ERP</div>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-3">
+              <button class="p-2 rounded hover:bg-gray-100 text-gray-600"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 3v2M16 3v2M3 11h18"/></svg></button>
+              <div class="flex items-center gap-2">
+                <div class="text-sm text-gray-600">admin</div>
+                <img src="https://via.placeholder.com/32x32.png?text=A" alt="avatar" class="w-8 h-8 rounded-full" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Content inner -->
+      <main class="p-6 space-y-6">
+
+        <!-- Hero Banner -->
+        <section class="bg-white rounded-lg shadow-sm overflow-hidden">
+          <div class="flex items-center gap-6 p-6">
+            <div class="flex-1">
+              <h1 class="text-2xl md:text-3xl font-extrabold text-slate-800">REALBIZ ERP</h1>
+              <p class="text-slate-500 mt-1">A Cloud Based Real Estate Automation</p>
+            </div>
+            <div class="w-1/2 hidden md:block">
+              <img src="https://via.placeholder.com/900x160.png?text=City+Skyline+Banner" alt="skyline" class="w-full h-32 object-cover rounded"/>
+            </div>
+          </div>
+        </section>
+
+        <!-- Real Estate Overview header -->
+        <section>
+          <div class="bg-green-600 text-white px-4 py-2 rounded-t">
+            <div class="max-w-7xl mx-auto flex items-center gap-3">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor"><path d="M3 13h8V3H3v10zM13 21h8V11h-8v10z"/></svg>
+              <div class="font-semibold">Real Estate</div>
+            </div>
+          </div>
+
+          <div class="bg-white p-4 rounded-b shadow-sm">
+            <div class="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+
+              <!-- Metric Card (repeat for 12 cards) -->
+              <template x-for="(card, index) in [
+                {title:'Location',count:11,color:'bg-blue-500',icon:'M12 2a1 1 0 00-1 1v1a1 1 0 1 0 2 0V3a1 1 0 0 0-1-1z'},
+                {title:'Projects',count:36,color:'bg-red-500'},
+                {title:'Products',count:38,color:'bg-yellow-400'},
+                {title:'Customers',count:29,color:'bg-teal-500'},
+                {title:'Sales',count:37,color:'bg-green-500'},
+                {title:'Vendors',count:30,color:'bg-blue-500'},
+                {title:'Contractors',count:1,color:'bg-teal-600'},
+                {title:"Today's Requisition",count:0,color:'bg-green-600'},
+                {title:"Today's Credit",count:1,color:'bg-blue-600'},
+                {title:"Today's Debit",count:0,color:'bg-red-600'},
+                {title:'Employees',count:3,color:'bg-yellow-500'},
+                {title:'Users',count:16,color:'bg-teal-400'}
+              ]" :key="index">
+                <div class="flex items-center justify-center p-6 rounded text-white font-semibold" :class="card.color">
+                  <div class="text-center">
+                    <div class="text-lg">{{card.title}}</div>
+                    <div class="text-2xl mt-2">{{card.count}}</div>
+                  </div>
+                </div>
+              </template>
+
+            </div>
+          </div>
+        </section>
+
+      </main>
+
+    </div>
+
+  </div>
+
+  <script>
+    // Small utility to expose card data in Alpine
+    document.addEventListener('alpine:init', () => {
+      Alpine.data('dashboard', () => ({ }));
+    });
+  </script>
+
+</body>
+</html>
