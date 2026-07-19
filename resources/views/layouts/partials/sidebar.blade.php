@@ -132,9 +132,10 @@
   
   <ul x-show="expandedModule === 'purchase' && sidebarOpen" x-cloak class="mt-1 pl-9 space-y-1 border-l border-slate-800 ml-5 text-slate-400">
     <li>
-      <a href="#" class="block py-1.5 px-2 rounded text-xs hover:bg-slate-800 hover:text-white transition-colors">
-        Vendors
-      </a>
+      <a href="{{ route('vendors.index') }}" 
+   class="block py-1.5 px-2 rounded text-xs transition-colors {{ request()->routeIs('vendors.*') ? 'bg-slate-800 text-white font-medium' : 'text-slate-400 hover:bg-slate-800 hover:text-white' }}">
+    Vendors
+</a>
     </li>
     <li>
       <a 
