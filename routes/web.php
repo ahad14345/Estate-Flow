@@ -5,7 +5,8 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CrmController;
-
+use App\Http\Controllers\ProjectController;
+use App\http\Controllers\PropertyController;
 Route::get('/', function () {
     if (Auth::check()) {
         return redirect()->route('dashboard');
@@ -59,4 +60,8 @@ Route::middleware('auth')->group(function () {
     });
 
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+});
+Route::prefix('modules')->group(function () {
+    Route::resource('projects', ProjectController::class);
+    Route::resource('properties', PropertyController::class);
 });

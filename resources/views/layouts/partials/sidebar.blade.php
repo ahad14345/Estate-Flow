@@ -1,58 +1,172 @@
-<aside class="fixed inset-y-0 left-0 z-30 flex flex-col overflow-hidden border-r border-slate-800 bg-slate-900 text-slate-100 transition-all duration-200" :class="sidebarOpen ? 'w-64' : 'w-16'">
-  <div class="flex items-center gap-3 border-b border-slate-800 px-4 py-4">
-    <div class="flex h-10 w-10 items-center justify-center rounded bg-gradient-to-r from-blue-600 to-cyan-400 font-bold text-white">EF</div>
-    <div class="min-w-0 flex-1" x-show="sidebarOpen">
-      <div class="text-sm font-semibold">EstateFlow ERP</div>
-      <div class="text-xs text-slate-300">Real Estate ERP</div>
+<aside :class="sidebarOpen ? 'w-64' : 'w-16'" class="h-screen transition-all duration-200 bg-slate-900 text-slate-100 flex flex-col flex-shrink-0 z-30">
+
+  <!-- Logo Brand Panel Container -->
+  <div class="flex items-center gap-3 px-4 py-4 border-b border-slate-800 h-14 flex-shrink-0">
+    <div class="flex items-center gap-3">
+      <div class="w-8 h-8 bg-gradient-to-r from-indigo-600 to-cyan-400 rounded flex items-center justify-center text-white font-bold text-sm flex-shrink-0">EF</div>
+      <div x-show="sidebarOpen" class="leading-tight" x-cloak>
+        <div class="text-sm font-semibold">EstateFlow ERP</div>
+        <div class="text-xs text-slate-400">Real Estate ERP</div>
+      </div>
     </div>
-    <button type="button" @click="sidebarOpen = !sidebarOpen" class="ml-auto text-slate-400 hover:text-white focus:outline-none">
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8m-8 6h16"/></svg>
-    </button>
   </div>
 
-  <nav class="flex-1 space-y-4 overflow-auto px-2 py-4">
+  <!-- User Profile Section -->
+  <div class="px-4 py-3 border-b border-slate-800 flex items-center gap-3 flex-shrink-0">
+    <div class="w-8 h-8 rounded-full bg-slate-700 flex items-center justify-center text-white font-medium text-sm flex-shrink-0">A</div>
+    <div x-show="sidebarOpen" class="flex-1 min-w-0" x-cloak>
+      <div class="text-sm font-medium truncate">admin</div>
+      <div class="text-xs text-slate-400 truncate">admin@estateflow.com</div>
+    </div>
+  </div>
+
+  <!-- Scrollable Module Tree Context -->
+  <nav class="flex-1 overflow-y-auto px-2 py-4 space-y-4">
+    
+    <!-- MAIN SECTION LINKS -->
     <div>
-      <div class="px-3 text-xs uppercase tracking-wide text-slate-400" x-show="sidebarOpen">Main</div>
+      <div x-show="sidebarOpen" class="px-3 text-xs text-slate-500 uppercase font-semibold tracking-wider" x-cloak>Main</div>
       <ul class="mt-2 space-y-1">
         <li>
-          <a href="{{ route('dashboard') }}" data-nav-link class="flex items-center gap-3 rounded px-3 py-2 transition hover:bg-slate-800 {{ Route::is('dashboard') ? 'bg-slate-800 text-white' : 'text-slate-300' }}">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M13 5v6h6"/></svg>
-            <span class="text-sm" x-show="sidebarOpen">Dashboard</span>
+          <a href="#" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-slate-800 text-slate-300 hover:text-white transition-colors">
+            <i class="bi bi-speedometer2 text-slate-400"></i>
+            <span x-show="sidebarOpen" class="text-sm" x-cloak>Dashboard</span>
           </a>
-        </li>
-        <li>
-          <div class="rounded">
-            <button type="button" @click="crmOpen = !crmOpen" class="flex w-full items-center justify-between gap-3 rounded px-3 py-2 text-left transition hover:bg-slate-800 {{ Route::is('crm.*') ? 'bg-slate-800 text-white' : 'text-slate-300' }}">
-              <span class="flex items-center gap-3">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor"><path d="M5 3a2 2 0 00-2 2v14l7-3 7 3V5a2 2 0 00-2-2H5z"/></svg>
-                <span class="text-sm" x-show="sidebarOpen">CRM</span>
-              </span>
-              <span class="text-xs text-slate-400" x-show="sidebarOpen" x-text="crmOpen ? '▾' : '▸'"></span>
-            </button>
-            <div x-show="sidebarOpen && crmOpen" x-collapse class="space-y-1 pb-2 ps-8 pt-2 text-sm">
-              <a href="{{ route('crm.dashboard') }}" data-nav-link class="block rounded px-2 py-1 transition hover:bg-slate-800 {{ Route::is('crm.dashboard') ? 'bg-slate-800 text-white' : 'text-slate-300' }}">Dashboard</a>
-              <a href="{{ route('crm.customers.index') }}" data-nav-link class="block rounded px-2 py-1 transition hover:bg-slate-800 {{ Route::is('crm.customers.*') ? 'bg-slate-800 text-white' : 'text-slate-300' }}">Customers</a>
-              <a href="{{ route('crm.leads.index') }}" data-nav-link class="block rounded px-2 py-1 transition hover:bg-slate-800 {{ Route::is('crm.leads.*') ? 'bg-slate-800 text-white' : 'text-slate-300' }}">Leads</a>
-              <a href="{{ route('crm.follow-ups.index') }}" data-nav-link class="block rounded px-2 py-1 transition hover:bg-slate-800 {{ Route::is('crm.follow-ups.*') ? 'bg-slate-800 text-white' : 'text-slate-300' }}">Follow-ups</a>
-              <a href="{{ route('crm.reports') }}" data-nav-link class="block rounded px-2 py-1 transition hover:bg-slate-800 {{ Route::is('crm.reports') ? 'bg-slate-800 text-white' : 'text-slate-300' }}">Reports</a>
-            </div>
-          </div>
         </li>
       </ul>
     </div>
 
+    <!-- MAIN APP CORE MODULES -->
     <div>
-      <div class="px-3 text-xs uppercase tracking-wide text-slate-400" x-show="sidebarOpen">Modules</div>
+      <div x-show="sidebarOpen" class="px-3 text-xs text-slate-500 uppercase font-semibold tracking-wider" x-cloak>Modules</div>
       <ul class="mt-2 space-y-1">
-        <li><a href="#" class="flex items-center gap-3 rounded px-3 py-2 text-slate-300 transition hover:bg-slate-800"><svg class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor"><path d="M3 13h8V3H3v10zM13 21h8V11h-8v10z"/></svg><span class="text-sm" x-show="sidebarOpen">Project Management</span></a></li>
-        <li><a href="#" class="flex items-center gap-3 rounded px-3 py-2 text-slate-300 transition hover:bg-slate-800"><svg class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor"><path d="M2 8l10-6 10 6v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8z"/></svg><span class="text-sm" x-show="sidebarOpen">Properties</span></a></li>
-        <li><a href="#" class="flex items-center gap-3 rounded px-3 py-2 text-slate-300 transition hover:bg-slate-800"><svg class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 12a5 5 0 100-10 5 5 0 000 10zM2 20a10 10 0 0120 0H2z"/></svg><span class="text-sm" x-show="sidebarOpen">Manage Customer</span></a></li>
+
+        <!-- CRM Module -->
+        <li>
+          <button @click="crmOpen = !crmOpen" class="w-full flex items-center justify-between px-3 py-2 rounded hover:bg-slate-800 text-slate-300 hover:text-white transition-colors">
+            <div class="flex items-center gap-3 min-w-0">
+              <i class="bi bi-person-lines-fill text-slate-400"></i>
+              <span x-show="sidebarOpen" class="text-sm truncate" x-cloak>CRM</span>
+            </div>
+            <i x-show="sidebarOpen" :class="crmOpen ? 'rotate-180' : ''" class="bi bi-chevron-down transform transition-transform text-slate-400 text-xs flex-shrink-0" x-cloak></i>
+          </button>
+          <ul x-show="crmOpen && sidebarOpen" x-cloak class="mt-1 pl-9 space-y-1 border-l border-slate-800 ml-5 text-slate-400">
+            <li>
+              <a href="{{ route('crm.dashboard') }}" class="block py-1.5 px-2 rounded text-xs hover:bg-slate-800 hover:text-white {{ request()->routeIs('crm.dashboard') ? 'text-white bg-slate-800' : '' }}">
+                CRM Dashboard
+              </a>
+            </li>
+            <li>
+              <a href="{{ route('crm.leads.index') }}" class="block py-1.5 px-2 rounded text-xs hover:bg-slate-800 hover:text-white {{ request()->routeIs('crm.leads.*') ? 'text-white bg-slate-800' : '' }}">
+                Leads
+              </a>
+            </li>
+            <li>
+              <a href="{{ route('crm.customers.index') }}" class="block py-1.5 px-2 rounded text-xs hover:bg-slate-800 hover:text-white {{ request()->routeIs('crm.customers.*') ? 'text-white bg-slate-800' : '' }}">
+                Customers
+              </a>
+            </li>
+            <li>
+              <a href="{{ route('crm.follow-ups.index') }}" class="block py-1.5 px-2 rounded text-xs hover:bg-slate-800 hover:text-white {{ request()->routeIs('crm.follow-ups.*') ? 'text-white bg-slate-800' : '' }}">
+                Follow-ups
+              </a>
+            </li>
+            <li>
+              <a href="{{ route('crm.reports') }}" class="block py-1.5 px-2 rounded text-xs hover:bg-slate-800 hover:text-white {{ request()->routeIs('crm.reports') ? 'text-white bg-slate-800' : '' }}">
+                Reports
+              </a>
+            </li>
+          </ul>
+        </li>
+
+       <!-- Projects & Properties Dropdown Tree -->
+<li>
+  <button @click="expandedModule = (expandedModule === 'projects' ? null : 'projects')" class="w-full flex items-center justify-between px-3 py-2 rounded hover:bg-slate-800 text-slate-300 hover:text-white transition-colors">
+    <div class="flex items-center gap-3 min-w-0">
+      <i class="bi bi-building text-slate-400"></i>
+      <span x-show="sidebarOpen" class="text-sm truncate" x-cloak>Projects & Properties</span>
+    </div>
+    <i x-show="sidebarOpen" :class="expandedModule === 'projects' ? 'rotate-180' : ''" class="bi bi-chevron-down transform transition-transform text-slate-400 text-xs flex-shrink-0" x-cloak></i>
+  </button>
+  <ul x-show="expandedModule === 'projects' && sidebarOpen" x-cloak class="mt-1 pl-9 space-y-1 border-l border-slate-800 ml-5 text-slate-400">
+    <li>
+      <a href="{{ route('projects.index') }}" class="block py-1.5 px-2 rounded text-xs hover:bg-slate-800 hover:text-white {{ request()->routeIs('projects.*') ? 'text-white bg-slate-800' : '' }}">
+        Projects
+      </a>
+    </li>
+   <li>
+  <a href="{{ route('properties.index') }}" class="block py-1.5 px-2 rounded text-xs hover:bg-slate-800 hover:text-white {{ request()->routeIs('properties.*') ? 'text-white bg-slate-800' : '' }}">
+    Properties
+  </a>
+</li>
+  </ul>
+</li>
+
+        <!-- Sales Dropdown Tree -->
+        <li>
+          <button @click="expandedModule = (expandedModule === 'sales' ? null : 'sales')" class="w-full flex items-center justify-between px-3 py-2 rounded hover:bg-slate-800 text-slate-300 hover:text-white transition-colors">
+            <div class="flex items-center gap-3 min-w-0">
+              <i class="bi bi-graph-up-arrow text-slate-400"></i>
+              <span x-show="sidebarOpen" class="text-sm truncate" x-cloak>Sales</span>
+            </div>
+            <i x-show="sidebarOpen" :class="expandedModule === 'sales' ? 'rotate-180' : ''" class="bi bi-chevron-down transform transition-transform text-slate-400 text-xs flex-shrink-0" x-cloak></i>
+          </button>
+          <ul x-show="expandedModule === 'sales' && sidebarOpen" x-cloak class="mt-1 pl-9 space-y-1 border-l border-slate-800 ml-5 text-slate-400">
+            <li><a href="#" class="block py-1.5 px-2 rounded text-xs hover:bg-slate-800 hover:text-white">Sales Orders</a></li>
+          </ul>
+        </li>
+
+        <!-- Purchase Dropdown Tree -->
+        <li>
+          <button @click="expandedModule = (expandedModule === 'purchase' ? null : 'purchase')" class="w-full flex items-center justify-between px-3 py-2 rounded hover:bg-slate-800 text-slate-300 hover:text-white transition-colors">
+            <div class="flex items-center gap-3 min-w-0">
+              <i class="bi bi-cart3 text-slate-400"></i>
+              <span x-show="sidebarOpen" class="text-sm truncate" x-cloak>Purchase</span>
+            </div>
+            <i x-show="sidebarOpen" :class="expandedModule === 'purchase' ? 'rotate-180' : ''" class="bi bi-chevron-down transform transition-transform text-slate-400 text-xs flex-shrink-0" x-cloak></i>
+          </button>
+          <ul x-show="expandedModule === 'purchase' && sidebarOpen" x-cloak class="mt-1 pl-9 space-y-1 border-l border-slate-800 ml-5 text-slate-400">
+            <li><a href="#" class="block py-1.5 px-2 rounded text-xs hover:bg-slate-800 hover:text-white">Vendors</a></li>
+            <li><a href="#" class="block py-1.5 px-2 rounded text-xs hover:bg-slate-800 hover:text-white">Purchase Orders</a></li>
+          </ul>
+        </li>
+
+        <!-- Accounting Dropdown Tree -->
+        <li>
+          <button @click="expandedModule = (expandedModule === 'accounting' ? null : 'accounting')" class="w-full flex items-center justify-between px-3 py-2 rounded hover:bg-slate-800 text-slate-300 hover:text-white transition-colors">
+            <div class="flex items-center gap-3 min-w-0">
+              <i class="bi bi-cash-coin text-slate-400"></i>
+              <span x-show="sidebarOpen" class="text-sm truncate" x-cloak>Accounting</span>
+            </div>
+            <i x-show="sidebarOpen" :class="expandedModule === 'accounting' ? 'rotate-180' : ''" class="bi bi-chevron-down transform transition-transform text-slate-400 text-xs flex-shrink-0" x-cloak></i>
+          </button>
+          <ul x-show="expandedModule === 'accounting' && sidebarOpen" x-cloak class="mt-1 pl-9 space-y-1 border-l border-slate-800 ml-5 text-slate-400">
+            <li><a href="#" class="block py-1.5 px-2 rounded text-xs hover:bg-slate-800 hover:text-white">Transactions</a></li>
+          </ul>
+        </li>
+
+        <!-- Employee Management Dropdown Tree -->
+        <li>
+          <button @click="expandedModule = (expandedModule === 'employees' ? null : 'employees')" class="w-full flex items-center justify-between px-3 py-2 rounded hover:bg-slate-800 text-slate-300 hover:text-white transition-colors">
+            <div class="flex items-center gap-3 min-w-0">
+              <i class="bi bi-people text-slate-400"></i>
+              <span x-show="sidebarOpen" class="text-sm truncate" x-cloak>Employee Management</span>
+            </div>
+            <i x-show="sidebarOpen" :class="expandedModule === 'employees' ? 'rotate-180' : ''" class="bi bi-chevron-down transform transition-transform text-slate-400 text-xs flex-shrink-0" x-cloak></i>
+          </button>
+          <ul x-show="expandedModule === 'employees' && sidebarOpen" x-cloak class="mt-1 pl-9 space-y-1 border-l border-slate-800 ml-5 text-slate-400">
+            <li><a href="#" class="block py-1.5 px-2 rounded text-xs hover:bg-slate-800 hover:text-white">Directory</a></li>
+          </ul>
+        </li>
+
       </ul>
     </div>
   </nav>
 
-  <div class="border-t border-slate-800 px-3 py-4 text-xs text-slate-400">
-    <div x-show="sidebarOpen">Powered by EstateFlow ERP</div>
-    <div class="mt-1">Version 0.1</div>
+  <!-- Sidebar Footer Notice Panel -->
+  <div class="px-4 py-3 border-t border-slate-800 text-xs text-slate-500 flex-shrink-0">
+    <div x-show="sidebarOpen" class="truncate" x-cloak>Powered by EstateFlow</div>
+    <div class="mt-0.5">Version 0.1</div>
   </div>
+
 </aside>

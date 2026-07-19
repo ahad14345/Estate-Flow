@@ -8,26 +8,51 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
   <script src="https://cdn.tailwindcss.com"></script>
   <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <style>
+    [x-cloak] { display: none !important; }
+  </style>
 </head>
-<body class="h-screen antialiased text-gray-700" x-data="{ sidebarOpen: true, crmOpen: false }" x-init="
-  const saved = localStorage.getItem('estateflow.sidebar.open');
-  if (saved !== null) {
-    sidebarOpen = saved === 'true';
-  }
-  crmOpen = {{ request()->routeIs('crm.*') ? 'true' : 'false' }};
-  $watch('sidebarOpen', value => localStorage.setItem('estateflow.sidebar.open', String(value)));
-" data-layout-root>
+<body class="h-screen antialiased text-gray-700 bg-gray-100" 
+  x-data="{ 
+    sidebarOpen: true, 
+    expandedModule: null,
+    crmOpen: false 
+  }" 
+  x-init="
+    const saved = localStorage.getItem('estateflow.sidebar.open');
+    if (saved !== null) {
+      sidebarOpen = saved === 'true';
+    }
+    
+    // Auto-detect Laravel route state mappings
+    crmOpen = {{ request()->routeIs('crm.*') ? 'true' : 'false' }};
+    if ({{ request()->routeIs('projects.*') || request()->routeIs('properties.*') ? 'true' : 'false' }}) { expandedModule = 'projects'; }
+    else if ({{ request()->routeIs('sales.*') ? 'true' : 'false' }}) { expandedModule = 'sales'; }
+    else if ({{ request()->routeIs('purchase.*') || request()->routeIs('vendors.*') ? 'true' : 'false' }}) { expandedModule = 'purchase'; }
+    else if ({{ request()->routeIs('accounting.*') ? 'true' : 'false' }}) { expandedModule = 'accounting'; }
+    else if ({{ request()->routeIs('employees.*') ? 'true' : 'false' }}) { expandedModule = 'employees'; }
+    else if ({{ request()->routeIs('users.*') ? 'true' : 'false' }}) { expandedModule = 'users'; }
+
+    $watch('sidebarOpen', value => localStorage.setItem('estateflow.sidebar.open', String(value)));
+  }" data-layout-root>
+  
   @if(request()->has('content_only'))
     <div id="page-content" class="space-y-6">
       @yield('content')
     </div>
   @else
-    <div class="min-h-screen bg-gray-100">
+    <!-- The outer flex container connects sidebar + main content in one continuous scope -->
+    <div class="flex h-screen overflow-hidden w-full">
+      
+      <!-- Include Sidebar Partition -->
       @include('layouts.partials.sidebar')
 
-      <div class="min-h-screen transition-all duration-200" :class="sidebarOpen ? 'ml-64' : 'ml-16'">
-        <header class="sticky top-0 z-20 border-b border-gray-200 bg-white">
-          <div class="mx-auto flex h-14 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+      <!-- Viewport Frame Wrapper -->
+      <div class="flex-1 flex flex-col min-w-0 h-screen overflow-hidden">
+        
+        <!-- Navbar Header -->
+        <header class="bg-white border-b border-gray-200 h-14 flex-shrink-0 z-10">
+          <div class="h-full flex items-center justify-between px-4 sm:px-6 lg:px-8">
             <div class="flex items-center gap-3">
               <button type="button" @click="sidebarOpen = !sidebarOpen" class="text-gray-600 hover:text-gray-900 focus:outline-none">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
@@ -40,7 +65,8 @@
           </div>
         </header>
 
-        <main id="page-content" class="space-y-6 p-6">
+        <!-- Document Scroll Area Canvas -->
+        <main id="page-content" class="flex-1 overflow-y-auto p-6 space-y-6">
           @if(session('success'))
             <div class="d-none" data-auto-toast="success">{{ session('success') }}</div>
             <div class="rounded border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
@@ -70,7 +96,8 @@
           @yield('content')
         </main>
 
-        <footer class="border-t border-gray-200 bg-white px-6 py-4 text-sm text-gray-500">
+        <!-- Footer Partition -->
+        <footer class="border-t border-gray-200 bg-white px-6 py-4 text-sm text-gray-500 flex-shrink-0">
           EstateFlow ERP • Admin dashboard
         </footer>
       </div>
@@ -83,7 +110,6 @@
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const toastContainer = document.getElementById('toast-container');
-
       const showToast = (message, type = 'success') => {
         const toast = document.createElement('div');
         toast.className = `toast align-items-center text-bg-${type === 'error' ? 'danger' : 'success'} border-0 show`;
