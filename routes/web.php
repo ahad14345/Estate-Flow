@@ -7,6 +7,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CrmController;
 use App\Http\Controllers\ProjectController;
 use App\http\Controllers\PropertyController;
+use App\Http\Controllers\PurchaseController;
 Route::get('/', function () {
     if (Auth::check()) {
         return redirect()->route('dashboard');
@@ -64,4 +65,10 @@ Route::middleware('auth')->group(function () {
 Route::prefix('modules')->group(function () {
     Route::resource('projects', ProjectController::class);
     Route::resource('properties', PropertyController::class);
+});
+Route::middleware(['auth'])->group(function () {
+    Route::get('purchases/export-csv', [PurchaseController::class, 'exportCsv'])->name('purchases.export.csv');
+    Route::post('purchases/bulk-delete', [PurchaseController::class, 'bulkDelete'])->name('purchases.bulk-delete');
+
+    Route::resource('purchases', PurchaseController::class);
 });

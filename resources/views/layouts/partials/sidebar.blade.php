@@ -28,7 +28,7 @@
       <div x-show="sidebarOpen" class="px-3 text-xs text-slate-500 uppercase font-semibold tracking-wider" x-cloak>Main</div>
       <ul class="mt-2 space-y-1">
         <li>
-          <a href="#" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-slate-800 text-slate-300 hover:text-white transition-colors">
+          <a href="{{ route('dashboard') }}" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-slate-800 text-slate-300 hover:text-white transition-colors">
             <i class="bi bi-speedometer2 text-slate-400"></i>
             <span x-show="sidebarOpen" class="text-sm" x-cloak>Dashboard</span>
           </a>
@@ -116,20 +116,36 @@
           </ul>
         </li>
 
-        <!-- Purchase Dropdown Tree -->
-        <li>
-          <button @click="expandedModule = (expandedModule === 'purchase' ? null : 'purchase')" class="w-full flex items-center justify-between px-3 py-2 rounded hover:bg-slate-800 text-slate-300 hover:text-white transition-colors">
-            <div class="flex items-center gap-3 min-w-0">
-              <i class="bi bi-cart3 text-slate-400"></i>
-              <span x-show="sidebarOpen" class="text-sm truncate" x-cloak>Purchase</span>
-            </div>
-            <i x-show="sidebarOpen" :class="expandedModule === 'purchase' ? 'rotate-180' : ''" class="bi bi-chevron-down transform transition-transform text-slate-400 text-xs flex-shrink-0" x-cloak></i>
-          </button>
-          <ul x-show="expandedModule === 'purchase' && sidebarOpen" x-cloak class="mt-1 pl-9 space-y-1 border-l border-slate-800 ml-5 text-slate-400">
-            <li><a href="#" class="block py-1.5 px-2 rounded text-xs hover:bg-slate-800 hover:text-white">Vendors</a></li>
-            <li><a href="#" class="block py-1.5 px-2 rounded text-xs hover:bg-slate-800 hover:text-white">Purchase Orders</a></li>
-          </ul>
-        </li>
+       <!-- Purchase Dropdown Tree -->
+<li :class="{ 'bg-slate-900/50 rounded-md': expandedModule === 'purchase' || {{ request()->routeIs('purchases.*') ? 'true' : 'false' }} }">
+  <button 
+    @click="expandedModule = (expandedModule === 'purchase' ? null : 'purchase')" 
+    class="w-full flex items-center justify-between px-3 py-2 rounded hover:bg-slate-800 text-slate-300 hover:text-white transition-colors {{ request()->routeIs('purchases.*') ? 'text-white bg-slate-800' : '' }}"
+    x-init="if({{ request()->routeIs('purchases.*') ? 'true' : 'false' }}) expandedModule = 'purchase'"
+  >
+    <div class="flex items-center gap-3 min-w-0">
+      <i class="bi bi-cart3 {{ request()->routeIs('purchases.*') ? 'text-blue-500' : 'text-slate-400' }}"></i>
+      <span x-show="sidebarOpen" class="text-sm truncate {{ request()->routeIs('purchases.*') ? 'font-medium text-white' : '' }}" x-cloak>Purchase</span>
+    </div>
+    <i x-show="sidebarOpen" :class="expandedModule === 'purchase' ? 'rotate-180' : ''" class="bi bi-chevron-down transform transition-transform text-slate-400 text-xs flex-shrink-0" x-cloak></i>
+  </button>
+  
+  <ul x-show="expandedModule === 'purchase' && sidebarOpen" x-cloak class="mt-1 pl-9 space-y-1 border-l border-slate-800 ml-5 text-slate-400">
+    <li>
+      <a href="#" class="block py-1.5 px-2 rounded text-xs hover:bg-slate-800 hover:text-white transition-colors">
+        Vendors
+      </a>
+    </li>
+    <li>
+      <a 
+        href="{{ route('purchases.index') }}" 
+        class="block py-1.5 px-2 rounded text-xs transition-colors {{ request()->routeIs('purchases.index') ? 'bg-blue-600/20 text-blue-400 font-medium border-r-2 border-blue-500' : 'hover:bg-slate-800 hover:text-white' }}"
+      >
+        Purchase Orders
+      </a>
+    </li>
+  </ul>
+</li>
 
         <!-- Accounting Dropdown Tree -->
         <li>
