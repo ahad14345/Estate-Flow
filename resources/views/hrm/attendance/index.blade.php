@@ -8,7 +8,7 @@
             <p class="text-muted small mb-0">Real-time verification metrics, time tracking checkpoints, and daily performance sync indicators.</p>
         </div>
         <div class="d-flex gap-2">
-            <a href="{{ route('attendance.export') }}" class="btn btn-outline-success rounded-3 small text-xs"><i class="bi bi-file-earmark-spreadsheet me-2"></i>Export Logs</a>
+            <a href="{{ route('hrm.attendance.export') }}" class="btn btn-outline-success rounded-3 small text-xs"><i class="bi bi-file-earmark-spreadsheet me-2"></i>Export Logs</a>
             <button class="btn btn-dark px-4 py-2 rounded-3 fw-medium text-white shadow-sm" data-bs-toggle="modal" data-bs-target="#markAttendanceModal">
                 <i class="bi bi-clock me-2"></i>Log Check-In
             </button>

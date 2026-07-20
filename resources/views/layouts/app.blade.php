@@ -12,6 +12,7 @@
     [x-cloak] { display: none !important; }
   </style>
 </head>
+
 <body class="h-screen antialiased text-gray-700 bg-gray-100" 
   x-data="{ 
     sidebarOpen: true, 
@@ -75,7 +76,7 @@
           @endif
 
           @if($errors->any())
-            <div class="d-none" data-auto-toast="error">{{ implode($errors->all(), ' | ') }}</div>
+            <div class="d-none" data-auto-toast="error">{{ implode(' | ', $errors->all()) }}</div>
             <div class="rounded border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
               <ul class="mb-0 list-disc ps-5">
                 @foreach($errors->all() as $error)
@@ -124,5 +125,6 @@
       });
     });
   </script>
+  @yield('scripts')
 </body>
 </html>

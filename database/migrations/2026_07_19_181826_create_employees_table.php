@@ -1,4 +1,3 @@
-
 <?php
 
 use Illuminate\Database\Migrations\Migration;
@@ -28,8 +27,13 @@ return new class extends Migration {
             $table->string('password', 255);
             $table->string('status', 20)->default('Active');
             $table->timestamps();
-            $table->timestamp('deleted_at')->nullable();
+            
+            // This macro single-handedly handles the soft-delete timestamp column
+            $table->softDeletes(); 
         });
     }
-    public function down(): void { Schema::dropIfExists('employees'); }
+
+    public function down(): void { 
+        Schema::dropIfExists('employees'); 
+    }
 };

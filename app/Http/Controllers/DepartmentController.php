@@ -3,45 +3,59 @@
 namespace App\Http\Controllers;
 
 use App\Models\Department;
+use App\Models\Employee;
 use Illuminate\Http\Request;
 
-class DepartmentController extends Controller {
-    public function index() {
-        $departments = Department::withCount('employees')->paginate(10);
-        
-        $largest = Department::withCount('employees')->orderBy('employees_count', 'desc')->first();
-        
+class DepartmentController extends Controller
+{
+    public function index()
+    {
+        $departments = Department::withCount('employees')->get();
+
         $metrics = [
-            'total' => Department::count(),
-            'total_emp' => \App\Models\Employee::count(),
-            'largest' => $largest ? $largest->name : 'N/A'
+            'total'     => Department::count(),
+            'total_emp' => Employee::count(), 
+            'largest'   => Department::withCount('employees')
+                            ->orderBy('employees_count', 'desc')
+                            ->first()?->name ?? 'None'
         ];
 
         return view('hrm.departments.index', compact('departments', 'metrics'));
     }
 
-    public function store(Request $request) {
-        $data = $request->validate([
-            'name' => 'required|string|unique:departments,name',
-            'dept_head' => 'nullable|string',
-            'status' => 'required'
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'dept_head' => 'nullable|string|max:255',
         ]);
-        Department::create($data);
-        return redirect()->route('departments.index')->with('success', 'Department established.');
+
+        Department::create($validated);
+
+        return redirect()->route('hrm.departments.index')
+            ->with('success', 'Department structural node provisioned successfully.');
     }
 
-    public function update(Request $request, Department $department) {
-        $data = $request->validate([
-            'name' => 'required|string|unique:departments,name,'.$department->id,
-            'dept_head' => 'nullable|string',
-            'status' => 'required'
-        ]);
-        $department->update($data);
-        return redirect()->route('departments.index')->with('success', 'Department structural values updated.');
-    }
+    public function destroy($id)
+    {
+        $department = Department::findOrFail($id);
+        $department->delete(); // Automatically utilizes SoftDeletes safely
 
-    public function destroy(Department $department) {
-        $department->delete();
-        return redirect()->route('departments.index')->with('success', 'Department archived.');
+        return redirect()->route('hrm.departments.index')
+            ->with('success', 'Department structural node archived.');
     }
+    public function update(Request $request, $id)
+{
+    $validated = $request->validate([
+        'name'      => 'required|string|max:255',
+        'dept_head' => 'nullable|string|max:255',
+        'status'    => 'required|string|in:Active,Inactive,Suspended',
+    ]);
+
+    $department = Department::findOrFail($id);
+    $department->update($validated);
+
+    return redirect()->route('hrm.departments.index')
+        ->with('success', 'Department operational profile modified.');
+}
 }

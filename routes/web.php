@@ -12,6 +12,7 @@ use App\Http\Controllers\VendorController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\AttendanceController;
+use App\Http\Controllers\AIController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,7 +33,6 @@ Route::get('/', function () {
 */
 
 Route::middleware('guest')->group(function () {
-
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
     Route::post('/login', [AuthController::class, 'login']);
 
@@ -42,7 +42,7 @@ Route::middleware('guest')->group(function () {
 
 /*
 |--------------------------------------------------------------------------
-| Authenticated Routes
+| Authenticated Routes (All Logged-in Users)
 |--------------------------------------------------------------------------
 */
 
@@ -50,7 +50,7 @@ Route::middleware('auth')->group(function () {
 
     /*
     |--------------------------------------------------------------------------
-    | Dashboard
+    | Dashboard & Session Control
     |--------------------------------------------------------------------------
     */
 
@@ -58,124 +58,108 @@ Route::middleware('auth')->group(function () {
         return view('dashboard');
     })->name('dashboard');
 
-    /*
-    |--------------------------------------------------------------------------
-    | Logout
-    |--------------------------------------------------------------------------
-    */
-
     Route::post('/logout', [AuthController::class, 'logout'])
         ->name('logout');
 
     /*
     |--------------------------------------------------------------------------
-    | CRM Module
+    | AI Assistant Module
     |--------------------------------------------------------------------------
     */
 
-    Route::prefix('crm')->name('crm.')->group(function () {
+    Route::prefix('assistant')->name('assistant.')->group(function () {
+        Route::get('/', [AIController::class, 'index'])->name('index');
+        Route::post('/chat', [AIController::class, 'chat'])->name('chat');
+    });
 
-        Route::get('/dashboard', [CrmController::class, 'dashboard'])->name('dashboard');
-
-        // Customers
-        Route::resource('customers', CrmController::class)->parameters([
-            'customers' => 'customer'
-        ])->except(['index']);
-
-        Route::get('customers', [CrmController::class, 'customersIndex'])->name('customers.index');
-        Route::get('customers/{customer}/interests', [CrmController::class, 'propertyInterestsIndex'])->name('customers.interests.index');
-        Route::post('customers/{customer}/interests', [CrmController::class, 'propertyInterestsStore'])->name('customers.interests.store');
-
-        // Leads
-        Route::get('leads', [CrmController::class, 'leadsIndex'])->name('leads.index');
-        Route::get('leads/create', [CrmController::class, 'leadsCreate'])->name('leads.create');
-        Route::post('leads', [CrmController::class, 'leadsStore'])->name('leads.store');
-        Route::get('leads/{lead}', [CrmController::class, 'leadsShow'])->name('leads.show');
-        Route::get('leads/{lead}/edit', [CrmController::class, 'leadsEdit'])->name('leads.edit');
-        Route::put('leads/{lead}', [CrmController::class, 'leadsUpdate'])->name('leads.update');
-        Route::delete('leads/{lead}', [CrmController::class, 'leadsDestroy'])->name('leads.destroy');
-
-        // Follow-ups
-        Route::get('follow-ups', [CrmController::class, 'followUpsIndex'])->name('follow-ups.index');
-        Route::get('follow-ups/create', [CrmController::class, 'followUpsCreate'])->name('follow-ups.create');
-        Route::post('follow-ups', [CrmController::class, 'followUpsStore'])->name('follow-ups.store');
-        Route::get('follow-ups/{followUp}/edit', [CrmController::class, 'followUpsEdit'])->name('follow-ups.edit');
-        Route::put('follow-ups/{followUp}', [CrmController::class, 'followUpsUpdate'])->name('follow-ups.update');
-        Route::delete('follow-ups/{followUp}', [CrmController::class, 'followUpsDestroy'])->name('follow-ups.destroy');
-
-        // Reports
-        Route::get('reports', [CrmController::class, 'reports'])->name('reports');
+    Route::get('/test-gemini-key', function () {
+        return config('services.gemini.key');
     });
 
     /*
     |--------------------------------------------------------------------------
-    | Employee Management (HRM)
+    | Admin Restricted Routes (Requires 'admin' Middleware)
     |--------------------------------------------------------------------------
     */
 
-    Route::prefix('hrm')->name('hrm.')->group(function () {
+    Route::middleware('admin')->group(function () {
 
-        // Employees
-        Route::get('employees/export', [EmployeeController::class, 'exportCSV'])
-            ->name('employees.export');
+        // CRM Module
+        Route::prefix('crm')->name('crm.')->group(function () {
+            Route::get('/dashboard', [CrmController::class, 'dashboard'])->name('dashboard');
 
-        Route::resource('employees', EmployeeController::class);
+            // Customers
+            Route::resource('customers', CrmController::class)->parameters([
+                'customers' => 'customer'
+            ])->except(['index']);
 
-        // Departments
-        Route::resource('departments', DepartmentController::class);
+            Route::get('customers', [CrmController::class, 'customersIndex'])->name('customers.index');
+            Route::get('customers/{customer}/interests', [CrmController::class, 'propertyInterestsIndex'])->name('customers.interests.index');
+            Route::post('customers/{customer}/interests', [CrmController::class, 'propertyInterestsStore'])->name('customers.interests.store');
 
-        // Attendance
-        Route::get('attendance', [AttendanceController::class, 'index'])
-            ->name('attendance.index');
+            // Leads
+            Route::get('leads', [CrmController::class, 'leadsIndex'])->name('leads.index');
+            Route::get('leads/create', [CrmController::class, 'leadsCreate'])->name('leads.create');
+            Route::post('leads', [CrmController::class, 'leadsStore'])->name('leads.store');
+            Route::get('leads/{lead}', [CrmController::class, 'leadsShow'])->name('leads.show');
+            Route::get('leads/{lead}/edit', [CrmController::class, 'leadsEdit'])->name('leads.edit');
+            Route::put('leads/{lead}', [CrmController::class, 'leadsUpdate'])->name('leads.update');
+            Route::delete('leads/{lead}', [CrmController::class, 'leadsDestroy'])->name('leads.destroy');
 
-        Route::post('attendance/mark', [AttendanceController::class, 'mark'])
-            ->name('attendance.mark');
+            // Follow-ups
+            Route::get('follow-ups', [CrmController::class, 'followUpsIndex'])->name('follow-ups.index');
+            Route::get('follow-ups/create', [CrmController::class, 'followUpsCreate'])->name('follow-ups.create');
+            Route::post('follow-ups', [CrmController::class, 'followUpsStore'])->name('follow-ups.store');
+            Route::get('follow-ups/{followUp}/edit', [CrmController::class, 'followUpsEdit'])->name('follow-ups.edit');
+            Route::put('follow-ups/{followUp}', [CrmController::class, 'followUpsUpdate'])->name('follow-ups.update');
+            Route::delete('follow-ups/{followUp}', [CrmController::class, 'followUpsDestroy'])->name('follow-ups.destroy');
 
-        Route::get('attendance/export', [AttendanceController::class, 'exportCSV'])
-            ->name('attendance.export');
-    });
+            // Reports
+            Route::get('reports', [CrmController::class, 'reports'])->name('reports');
+        });
 
-    /*
-    |--------------------------------------------------------------------------
-    | Purchase Module
-    |--------------------------------------------------------------------------
-    */
+        // Employee Management (HRM)
+        Route::prefix('hrm')->name('hrm.')->group(function () {
+            Route::get('employees/export', [EmployeeController::class, 'exportCSV'])
+                ->name('employees.export');
 
-    Route::prefix('purchases')->name('purchases.')->group(function () {
+            Route::resource('employees', EmployeeController::class);
 
-        Route::get('export-csv', [PurchaseController::class, 'exportCsv'])
-            ->name('export.csv');
+            Route::resource('departments', DepartmentController::class);
 
-        Route::post('bulk-delete', [PurchaseController::class, 'bulkDelete'])
-            ->name('bulk-delete');
-    });
+            Route::get('attendance', [AttendanceController::class, 'index'])
+                ->name('attendance.index');
 
-    Route::resource('purchases', PurchaseController::class);
+            Route::post('attendance/mark', [AttendanceController::class, 'mark'])
+                ->name('attendance.mark');
 
-    /*
-    |--------------------------------------------------------------------------
-    | Vendor Module
-    |--------------------------------------------------------------------------
-    */
+            Route::get('attendance/export', [AttendanceController::class, 'exportCSV'])
+                ->name('attendance.export');
+        });
 
-    Route::prefix('vendors')->name('vendors.')->group(function () {
+        // Purchase Module
+        Route::prefix('purchases')->name('purchases.')->group(function () {
+            Route::get('export-csv', [PurchaseController::class, 'exportCsv'])
+                ->name('export.csv');
 
-        Route::post('bulk-delete', [VendorController::class, 'bulkDestroy'])
-            ->name('bulk-delete');
-    });
+            Route::post('bulk-delete', [PurchaseController::class, 'bulkDelete'])
+                ->name('bulk-delete');
+        });
+        Route::resource('purchases', PurchaseController::class);
 
-    Route::resource('vendors', VendorController::class);
+        // Vendor Module
+        Route::prefix('vendors')->name('vendors.')->group(function () {
+            Route::post('bulk-delete', [VendorController::class, 'bulkDestroy'])
+                ->name('bulk-delete');
+        });
+        Route::resource('vendors', VendorController::class);
 
-    /*
-    |--------------------------------------------------------------------------
-    | Project & Property Module
-    |--------------------------------------------------------------------------
-    */
+        // Project & Property Module
+        Route::prefix('modules')->group(function () {
+            Route::resource('projects', ProjectController::class);
+            Route::resource('properties', PropertyController::class);
+        });
 
-    Route::prefix('modules')->group(function () {
+    }); // End Admin Middleware Group
 
-        Route::resource('projects', ProjectController::class);
-
-        Route::resource('properties', PropertyController::class);
-    });
-});
+}); // End Auth Middleware Group
