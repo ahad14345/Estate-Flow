@@ -78,66 +78,65 @@ Route::middleware('auth')->group(function () {
 
     /*
     |--------------------------------------------------------------------------
-    | Admin Restricted Routes (Requires 'admin' Middleware)
+    | Dynamic Permission-Based Module Routes
     |--------------------------------------------------------------------------
     */
 
-    Route::middleware('admin')->group(function () {
+    // CRM Module Permission Check
+    Route::middleware('module:crm')->prefix('crm')->name('crm.')->group(function () {
+        Route::get('/dashboard', [CrmController::class, 'dashboard'])->name('dashboard');
 
-        // CRM Module
-        Route::prefix('crm')->name('crm.')->group(function () {
-            Route::get('/dashboard', [CrmController::class, 'dashboard'])->name('dashboard');
+        // Customers
+        Route::resource('customers', CrmController::class)->parameters([
+            'customers' => 'customer'
+        ])->except(['index']);
 
-            // Customers
-            Route::resource('customers', CrmController::class)->parameters([
-                'customers' => 'customer'
-            ])->except(['index']);
+        Route::get('customers', [CrmController::class, 'customersIndex'])->name('customers.index');
+        Route::get('customers/{customer}/interests', [CrmController::class, 'propertyInterestsIndex'])->name('customers.interests.index');
+        Route::post('customers/{customer}/interests', [CrmController::class, 'propertyInterestsStore'])->name('customers.interests.store');
 
-            Route::get('customers', [CrmController::class, 'customersIndex'])->name('customers.index');
-            Route::get('customers/{customer}/interests', [CrmController::class, 'propertyInterestsIndex'])->name('customers.interests.index');
-            Route::post('customers/{customer}/interests', [CrmController::class, 'propertyInterestsStore'])->name('customers.interests.store');
+        // Leads
+        Route::get('leads', [CrmController::class, 'leadsIndex'])->name('leads.index');
+        Route::get('leads/create', [CrmController::class, 'leadsCreate'])->name('leads.create');
+        Route::post('leads', [CrmController::class, 'leadsStore'])->name('leads.store');
+        Route::get('leads/{lead}', [CrmController::class, 'leadsShow'])->name('leads.show');
+        Route::get('leads/{lead}/edit', [CrmController::class, 'leadsEdit'])->name('leads.edit');
+        Route::put('leads/{lead}', [CrmController::class, 'leadsUpdate'])->name('leads.update');
+        Route::delete('leads/{lead}', [CrmController::class, 'leadsDestroy'])->name('leads.destroy');
 
-            // Leads
-            Route::get('leads', [CrmController::class, 'leadsIndex'])->name('leads.index');
-            Route::get('leads/create', [CrmController::class, 'leadsCreate'])->name('leads.create');
-            Route::post('leads', [CrmController::class, 'leadsStore'])->name('leads.store');
-            Route::get('leads/{lead}', [CrmController::class, 'leadsShow'])->name('leads.show');
-            Route::get('leads/{lead}/edit', [CrmController::class, 'leadsEdit'])->name('leads.edit');
-            Route::put('leads/{lead}', [CrmController::class, 'leadsUpdate'])->name('leads.update');
-            Route::delete('leads/{lead}', [CrmController::class, 'leadsDestroy'])->name('leads.destroy');
+        // Follow-ups
+        Route::get('follow-ups', [CrmController::class, 'followUpsIndex'])->name('follow-ups.index');
+        Route::get('follow-ups/create', [CrmController::class, 'followUpsCreate'])->name('follow-ups.create');
+        Route::post('follow-ups', [CrmController::class, 'followUpsStore'])->name('follow-ups.store');
+        Route::get('follow-ups/{followUp}/edit', [CrmController::class, 'followUpsEdit'])->name('follow-ups.edit');
+        Route::put('follow-ups/{followUp}', [CrmController::class, 'followUpsUpdate'])->name('follow-ups.update');
+        Route::delete('follow-ups/{followUp}', [CrmController::class, 'followUpsDestroy'])->name('follow-ups.destroy');
 
-            // Follow-ups
-            Route::get('follow-ups', [CrmController::class, 'followUpsIndex'])->name('follow-ups.index');
-            Route::get('follow-ups/create', [CrmController::class, 'followUpsCreate'])->name('follow-ups.create');
-            Route::post('follow-ups', [CrmController::class, 'followUpsStore'])->name('follow-ups.store');
-            Route::get('follow-ups/{followUp}/edit', [CrmController::class, 'followUpsEdit'])->name('follow-ups.edit');
-            Route::put('follow-ups/{followUp}', [CrmController::class, 'followUpsUpdate'])->name('follow-ups.update');
-            Route::delete('follow-ups/{followUp}', [CrmController::class, 'followUpsDestroy'])->name('follow-ups.destroy');
+        // Reports
+        Route::get('reports', [CrmController::class, 'reports'])->name('reports');
+    });
 
-            // Reports
-            Route::get('reports', [CrmController::class, 'reports'])->name('reports');
-        });
+    // Employee Management (HRM) Module Permission Check
+    Route::middleware('module:hrm')->prefix('hrm')->name('hrm.')->group(function () {
+        Route::get('employees/export', [EmployeeController::class, 'exportCSV'])
+            ->name('employees.export');
 
-        // Employee Management (HRM)
-        Route::prefix('hrm')->name('hrm.')->group(function () {
-            Route::get('employees/export', [EmployeeController::class, 'exportCSV'])
-                ->name('employees.export');
+        Route::resource('employees', EmployeeController::class);
 
-            Route::resource('employees', EmployeeController::class);
+        Route::resource('departments', DepartmentController::class);
 
-            Route::resource('departments', DepartmentController::class);
+        Route::get('attendance', [AttendanceController::class, 'index'])
+            ->name('attendance.index');
 
-            Route::get('attendance', [AttendanceController::class, 'index'])
-                ->name('attendance.index');
+        Route::post('attendance/mark', [AttendanceController::class, 'mark'])
+            ->name('attendance.mark');
 
-            Route::post('attendance/mark', [AttendanceController::class, 'mark'])
-                ->name('attendance.mark');
+        Route::get('attendance/export', [AttendanceController::class, 'exportCSV'])
+            ->name('attendance.export');
+    });
 
-            Route::get('attendance/export', [AttendanceController::class, 'exportCSV'])
-                ->name('attendance.export');
-        });
-
-        // Purchase Module
+    // Purchases Module Permission Check
+    Route::middleware('module:purchases')->group(function () {
         Route::prefix('purchases')->name('purchases.')->group(function () {
             Route::get('export-csv', [PurchaseController::class, 'exportCsv'])
                 ->name('export.csv');
@@ -146,20 +145,21 @@ Route::middleware('auth')->group(function () {
                 ->name('bulk-delete');
         });
         Route::resource('purchases', PurchaseController::class);
+    });
 
-        // Vendor Module
+    // Vendor Module Permission Check
+    Route::middleware('module:vendors')->group(function () {
         Route::prefix('vendors')->name('vendors.')->group(function () {
             Route::post('bulk-delete', [VendorController::class, 'bulkDestroy'])
                 ->name('bulk-delete');
         });
         Route::resource('vendors', VendorController::class);
+    });
 
-        // Project & Property Module
-        Route::prefix('modules')->group(function () {
-            Route::resource('projects', ProjectController::class);
-            Route::resource('properties', PropertyController::class);
-        });
-
-    }); // End Admin Middleware Group
+    // Project & Property Module Permission Check
+    Route::middleware('module:projects')->prefix('modules')->group(function () {
+        Route::resource('projects', ProjectController::class);
+        Route::resource('properties', PropertyController::class);
+    });
 
 }); // End Auth Middleware Group

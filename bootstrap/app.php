@@ -13,9 +13,10 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         
-        // Register the custom Admin middleware alias here
+        // Register custom middleware aliases
         $middleware->alias([
-            'admin' => \App\Http\Middleware\EnsureUserIsAdmin::class,
+            'admin'  => \App\Http\Middleware\EnsureUserIsAdmin::class,
+            'module' => \App\Http\Middleware\CheckModuleAccess::class,
         ]);
         
     })
