@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers; // Updated to root controller namespace
+namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Employee;
@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\Department;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 class EmployeeController extends Controller
 {
@@ -21,7 +22,7 @@ class EmployeeController extends Controller
         $departmentId = $request->input('department_id');
         $status = $request->input('status');
 
-        // 2. Build the query mapping
+        // 2. Build query
         $query = Employee::with('department');
 
         if ($search) {
@@ -43,7 +44,7 @@ class EmployeeController extends Controller
 
         $employees = $query->latest()->paginate(10);
 
-        // 3. Compile structural interface metrics
+        // 3. Interface metrics
         $metrics = [
             'total'          => Employee::count(),
             'active'         => Employee::where('status', 'Active')->count(),
@@ -68,7 +69,7 @@ class EmployeeController extends Controller
             'last_name'         => 'required|string|max:255',
             'email'             => 'required|email|unique:users,email|unique:employees,email',
             'phone'             => 'required|string|max:20',
-            'username'          => 'required|string|unique:users,username|max:50',
+            'username'          => 'required|string|max:50',
             'password'          => 'required|string|min:6',
             'role'              => 'required|string|in:Admin,Manager,Employee',
             'gender'            => 'required|string',
@@ -86,33 +87,48 @@ class EmployeeController extends Controller
         DB::beginTransaction();
 
         try {
-            // Generate user authentication profile
+            $username = $request->input('username') ?? explode('@', $request->email)[0];
+
+            // 1. Generate user authentication profile
             $user = User::create([
                 'name'     => $request->first_name . ' ' . $request->last_name,
                 'email'    => $request->email,
-                'username' => $request->username,
+                'username' => $username,
                 'password' => Hash::make($request->password),
                 'role'     => $request->role, 
             ]);
 
-            // Save remainder structural attributes to employees profile data matrix
+            // 2. Save employee record
             $employee = new Employee();
-            $employee->user_id = $user->id;
-            $employee->first_name = $validatedData['first_name'];
-            $employee->last_name = $validatedData['last_name'];
-            $employee->email = $validatedData['email'];
-            $employee->phone = $validatedData['phone'];
-            $employee->gender = $validatedData['gender'];
-            $employee->dob = $validatedData['dob'];
+            
+            // Assign user_id dynamically if column exists in table schema
+            if (Schema::hasColumn('employees', 'user_id')) {
+                $employee->user_id = $user->id;
+            }
+
+            // Explicitly set non-nullable table attributes
+            $employee->username = $username;
+
+            if (Schema::hasColumn('employees', 'password')) {
+                $employee->password = Hash::make($request->password);
+            }
+
+            $employee->first_name        = $validatedData['first_name'];
+            $employee->last_name         = $validatedData['last_name'];
+            $employee->email             = $validatedData['email'];
+            $employee->phone             = $validatedData['phone'];
+            $employee->gender            = $validatedData['gender'];
+            $employee->dob               = $validatedData['dob'];
             $employee->emergency_contact = $validatedData['emergency_contact'];
-            $employee->address = $validatedData['address'];
-            $employee->designation = $validatedData['designation'];
-            $employee->department_id = $validatedData['department_id'];
-            $employee->emp_type = $validatedData['emp_type'];
-            $employee->salary = $validatedData['salary'];
-            $employee->joining_date = $validatedData['joining_date'];
-            $employee->status = $validatedData['status'];
-            $employee->employee_code = 'EMP-' . strtoupper(uniqid()); 
+            $employee->address           = $validatedData['address'];
+            $employee->designation       = $validatedData['designation'];
+            $employee->department_id     = $validatedData['department_id'];
+            $employee->emp_type          = $validatedData['emp_type'];
+            $employee->salary            = $validatedData['salary'];
+            $employee->joining_date      = $validatedData['joining_date'];
+            $employee->status            = $validatedData['status'];
+            
+            // employee_code is generated automatically via Employee model boot() method
             
             $employee->save();
 

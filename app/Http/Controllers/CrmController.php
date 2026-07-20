@@ -48,6 +48,10 @@ class CrmController extends Controller
         ));
     }
 
+    /* =========================================================================
+     * CUSTOMER METHODS
+     * ========================================================================= */
+
     public function customersIndex(Request $request)
     {
         $query = Customer::query();
@@ -90,7 +94,7 @@ class CrmController extends Controller
             'city' => $request->city,
             'customer_type' => $request->customer_type,
             'preferred_property_type' => $request->preferred_property_type,
-            'budget' => $request->budget,
+            'budget' => $request->budget ?? 0, // Fallback to 0 if null
             'assigned_employee' => $request->assigned_employee,
             'status' => $request->status,
             'notes' => $request->notes,
@@ -141,6 +145,49 @@ class CrmController extends Controller
         return redirect()->route('crm.customers.index')->with('success', 'Customer moved to trash.');
     }
 
+    /* =========================================================================
+     * RESOURCE ALIASES (Fixes BadMethodCallException for standard resource routes)
+     * ========================================================================= */
+
+    public function index(Request $request)
+    {
+        return $this->customersIndex($request);
+    }
+
+    public function create()
+    {
+        return $this->customersCreate();
+    }
+
+    public function store(CustomerStoreRequest $request)
+    {
+        return $this->customersStore($request);
+    }
+
+    public function show(Customer $customer)
+    {
+        return $this->customersShow($customer);
+    }
+
+    public function edit(Customer $customer)
+    {
+        return $this->customersEdit($customer);
+    }
+
+    public function update(CustomerUpdateRequest $request, Customer $customer)
+    {
+        return $this->customersUpdate($request, $customer);
+    }
+
+    public function destroy(Customer $customer)
+    {
+        return $this->customersDestroy($customer);
+    }
+
+    /* =========================================================================
+     * LEAD METHODS
+     * ========================================================================= */
+
     public function leadsIndex(Request $request)
     {
         $query = Lead::query();
@@ -177,12 +224,12 @@ class CrmController extends Controller
             'priority' => $request->priority,
             'status' => $request->status,
             'assigned_employee' => $request->assigned_employee,
-            'budget' => $request->budget,
+            'budget' => $request->budget ?? 0, // Fallback to 0 if null
             'notes' => $request->notes,
         ]);
 
         CustomerActivity::create([
-            'customer_id' => $lead->customer_id ?? 0,
+            'customer_id' => $lead->customer_id ?? null,
             'activity_type' => 'Lead',
             'subject' => 'Lead created',
             'description' => 'A new lead was created.',
@@ -218,7 +265,7 @@ class CrmController extends Controller
                 'city' => null,
                 'customer_type' => 'Buyer',
                 'preferred_property_type' => null,
-                'budget' => $lead->budget,
+                'budget' => $lead->budget ?? 0, // Fallback to 0 if null
                 'assigned_employee' => $lead->assigned_employee,
                 'status' => 'Active',
                 'notes' => $lead->notes,
@@ -244,6 +291,10 @@ class CrmController extends Controller
 
         return redirect()->route('crm.leads.index')->with('success', 'Lead deleted successfully.');
     }
+
+    /* =========================================================================
+     * FOLLOW-UP METHODS
+     * ========================================================================= */
 
     public function followUpsIndex(Request $request)
     {
@@ -280,7 +331,7 @@ class CrmController extends Controller
         $followUp = FollowUp::create($data);
 
         CustomerActivity::create([
-            'customer_id' => $followUp->customer_id ?? 0,
+            'customer_id' => $followUp->customer_id ?? null,
             'activity_type' => 'Follow-up',
             'subject' => $followUp->subject,
             'description' => 'A follow-up was scheduled.',
@@ -322,6 +373,10 @@ class CrmController extends Controller
 
         return redirect()->route('crm.follow-ups.index')->with('success', 'Follow-up deleted successfully.');
     }
+
+    /* =========================================================================
+     * PROPERTY INTERESTS & REPORTS
+     * ========================================================================= */
 
     public function propertyInterestsIndex(Customer $customer)
     {

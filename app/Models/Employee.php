@@ -9,6 +9,7 @@ use Illuminate\Support\Carbon;
 
 class Employee extends Model {
     use HasFactory, SoftDeletes;
+
     protected $guarded = [];
     protected $hidden = ['password'];
     protected $casts = [
@@ -30,6 +31,11 @@ class Employee extends Model {
         });
     }
 
-    public function department() { return $this->belongsTo(Department::class); }
-    public function attendances() { return $this->hasMany(Attendance::class); }
+    public function department() { 
+        return $this->belongsTo(Department::class); 
+    }
+    
+    public function attendances() { 
+        return $this->hasMany(Attendance::class); 
+    }
 }

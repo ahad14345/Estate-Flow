@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('city')->nullable();
             $table->string('customer_type');
             $table->string('preferred_property_type')->nullable();
-            $table->decimal('budget', 12, 2)->default(0);
+            $table->decimal('budget', 12, 2)->nullable()->default(0); // 👈 Nullable to prevent SQLite constraints
             $table->string('assigned_employee')->nullable();
             $table->string('status')->default('Lead');
             $table->text('notes')->nullable();
@@ -41,7 +41,7 @@ return new class extends Migration
             $table->string('priority')->default('Medium');
             $table->string('status')->default('New');
             $table->string('assigned_employee')->nullable();
-            $table->decimal('budget', 12, 2)->default(0);
+            $table->decimal('budget', 12, 2)->nullable()->default(0); // 👈 Nullable to prevent SQLite constraints
             $table->text('notes')->nullable();
             $table->timestamp('converted_at')->nullable();
             $table->timestamps();
